@@ -8,6 +8,9 @@ const FuelPriceTracker = () => {
   const [priceAlerts, setPriceAlerts] = useState([]);
   const [userLocation, setUserLocation] = useState('Gauteng');
   const [alertThreshold, setAlertThreshold] = useState(5);
+  const [alertEmail, setAlertEmail] = useState('');
+const [successMessage, setSuccessMessage] = useState('');
+const [showEmailModal, setShowEmailModal] = useState(false);
 
   // Simulated historical price data
   const priceHistory = [
@@ -172,10 +175,14 @@ const FuelPriceTracker = () => {
                 </select>
               </div>
             </div>
-            <button className="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all">
-              <Bell className="w-4 h-4" />
-              <span className="text-sm font-semibold">Alerts</span>
-            </button>
+   <button
+  onClick={() => setActiveTab('alerts')}
+  className="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all"
+>
+  <Bell className="w-4 h-4" />
+  <span className="text-sm font-semibold">Alerts</span>
+</button>
+
           </div>
         </div>
 
@@ -205,7 +212,7 @@ const FuelPriceTracker = () => {
                 <div key={type} className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 sm:p-6 rounded-xl border border-cyan-500/30 shadow-xl hover:shadow-cyan-500/20 transition-all">
                   <div className="flex items-center justify-between mb-2 sm:mb-3">
                     <span className="text-gray-400 text-xs sm:text-sm font-medium">{getFuelTypeLabel(type)}</span>
-                    <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
+                 <span className="text-cyan-400 font-bold text-sm sm:text-base">R</span>
                   </div>
                   <div className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">R{price.toFixed(2)}</div>
                   <div className="flex items-center gap-1 text-xs sm:text-sm">
@@ -476,10 +483,73 @@ const FuelPriceTracker = () => {
                     <span className="text-gray-300">Weekly price summary</span>
                   </label>
                 </div>
+                <div>
 
-                <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg">
-                  Save Alert Settings
-                </button>
+</div>
+
+   <button
+  onClick={() => setShowEmailModal(true)}
+  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg"
+>
+  Save Alert Settings
+</button>
+
+
+{/* Email Modal */}
+{showEmailModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-gray-800 p-6 rounded-xl w-11/12 sm:w-96 border border-cyan-500 shadow-lg relative">
+      <button
+        className="absolute top-3 right-3 text-gray-400 hover:text-white"
+        onClick={() => setShowEmailModal(false)}
+      >
+        ✕
+      </button>
+
+      {!successMessage ? (
+        <>
+          <h2 className="text-xl font-bold mb-4 text-white">Enter Your Email</h2>
+          <input
+            type="email"
+            value={alertEmail}
+            onChange={(e) => setAlertEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 outline-none mb-4"
+          />
+          <button
+            onClick={() => {
+              if (!alertEmail || !alertEmail.includes('@')) {
+                alert('Please enter a valid email address.');
+                return;
+              }
+              setSuccessMessage(`Alert settings saved successfully for ${alertEmail}`);
+              
+              // Optional: hide after 3 seconds
+              setTimeout(() => {
+                setSuccessMessage('');
+                setShowEmailModal(false);
+              }, 3000);
+            }}
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg"
+          >
+            Save
+          </button>
+        </>
+      ) : (
+        <div className="text-center">
+          <p className="text-green-400 font-semibold mb-4">{successMessage}</p>
+          <button
+            onClick={() => setShowEmailModal(false)}
+            className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-semibold text-white"
+          >
+            Close
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
               </div>
             </div>
 
