@@ -11,6 +11,7 @@ const FuelPriceTracker = () => {
   const [alertEmail, setAlertEmail] = useState('');
 const [successMessage, setSuccessMessage] = useState('');
 const [showEmailModal, setShowEmailModal] = useState(false);
+const [emailError, setEmailError] = useState('');
 
   // Simulated historical price data
   const priceHistory = [
@@ -484,16 +485,14 @@ const [showEmailModal, setShowEmailModal] = useState(false);
                   </label>
                 </div>
                 <div>
+        </div>
 
-</div>
-
-   <button
-  onClick={() => setShowEmailModal(true)}
-  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg"
->
-  Save Alert Settings
-</button>
-
+        <button
+        onClick={() => setShowEmailModal(true)}
+        className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg"
+        >
+        Save Alert Settings
+        </button>
 
 {/* Email Modal */}
 {showEmailModal && (
@@ -501,7 +500,10 @@ const [showEmailModal, setShowEmailModal] = useState(false);
     <div className="bg-gray-800 p-6 rounded-xl w-11/12 sm:w-96 border border-cyan-500 shadow-lg relative">
       <button
         className="absolute top-3 right-3 text-gray-400 hover:text-white"
-        onClick={() => setShowEmailModal(false)}
+        onClick={() => {
+          setShowEmailModal(false);
+          setEmailError(''); 
+        }}
       >
         ✕
       </button>
@@ -514,17 +516,22 @@ const [showEmailModal, setShowEmailModal] = useState(false);
             value={alertEmail}
             onChange={(e) => setAlertEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 outline-none mb-4"
+            className={`w-full px-4 py-2 mb-4  rounded-lg bg-gray-700 text-white border ${
+              emailError ? 'border-red-500' : 'border-gray-600'
+            } focus:border-cyan-500 outline-none mb-1`}
           />
+          {emailError && (
+            <p className="text-red-400 text-sm mb-3">{emailError}</p>
+          )}
           <button
             onClick={() => {
               if (!alertEmail || !alertEmail.includes('@')) {
-                alert('Please enter a valid email address.');
+                setEmailError('Please enter a valid email address.');
                 return;
               }
+              setEmailError(''); 
               setSuccessMessage(`Alert settings saved successfully for ${alertEmail}`);
-              
-              // Optional: hide after 3 seconds
+
               setTimeout(() => {
                 setSuccessMessage('');
                 setShowEmailModal(false);
@@ -539,7 +546,10 @@ const [showEmailModal, setShowEmailModal] = useState(false);
         <div className="text-center">
           <p className="text-green-400 font-semibold mb-4">{successMessage}</p>
           <button
-            onClick={() => setShowEmailModal(false)}
+            onClick={() => {
+              setShowEmailModal(false);
+              setEmailError(''); 
+            }}
             className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-semibold text-white"
           >
             Close
@@ -549,7 +559,6 @@ const [showEmailModal, setShowEmailModal] = useState(false);
     </div>
   </div>
 )}
-
               </div>
             </div>
 
