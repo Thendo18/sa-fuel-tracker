@@ -523,24 +523,19 @@ const [emailError, setEmailError] = useState('');
           {emailError && (
             <p className="text-red-400 text-sm mb-3">{emailError}</p>
           )}
-          <button
-            onClick={() => {
-              if (!alertEmail || !alertEmail.includes('@')) {
-                setEmailError('Please enter a valid email address.');
-                return;
-              }
-              setEmailError(''); 
-              setSuccessMessage(`Alert settings saved successfully for ${alertEmail}`);
-
-              setTimeout(() => {
-                setSuccessMessage('');
-                setShowEmailModal(false);
-              }, 3000);
-            }}
-            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg"
-          >
-            Save
-          </button>
+        <button
+    onClick={() => {
+        if (!alertEmail || !alertEmail.includes('@')) {
+        setEmailError('Please enter a valid email address.');
+        return;
+        }
+        setEmailError('');
+        setSuccessMessage(`Alert settings saved successfully for ${alertEmail}`);
+    }}
+    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all shadow-lg"
+    >
+    Save
+    </button>
         </>
       ) : (
         <div className="text-center">
